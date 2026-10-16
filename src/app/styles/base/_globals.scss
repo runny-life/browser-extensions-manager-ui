@@ -1,1 +1,79 @@
+@use '../abstracts' as *;
 
+:root {
+  // === Page ===
+  --bg-page: #{$light-gradient};
+
+  // === Surfaces ===
+  --color-bg-surface: #{$neutral-0};
+  --color-bg-elevated: #{$neutral-100};
+  --color-bg-elevated-hover: #{$neutral-300};
+
+  // === Hover ===
+  --color-bg-hover: rgb(255 255 255 / 20%);
+
+  // === Accent ===
+  --color-bg-accent: #{$red-700};
+  --color-bg-accent-hover: #{$red-500};
+  --color-text-accent: #{$neutral-700};
+
+  // === Text ===
+  --color-text-primary: #{$neutral-900};
+  --color-text-secondary: #{$neutral-600};
+  --color-text-inverse: #{$neutral-0};
+
+  // === Border ===
+  --color-border: #{$neutral-200};
+
+  // === Focus ===
+  --color-focus-ring: #{$red-400};
+
+  // === Toggle ===
+  --color-toggle-off: #{$neutral-300};
+  --color-toggle-knob: #{$neutral-0};
+}
+
+[data-theme='dark'] {
+  --bg-page: #{$dark-gradient};
+
+  --color-bg-surface: #{$neutral-800};
+  --color-bg-elevated: #{$neutral-700};
+  --color-bg-elevated-hover: #{$neutral-600};
+
+  --color-bg-hover: #{$neutral-600};
+
+  --color-bg-accent: #{$red-400};
+  --color-text-accent: #{$red-400};
+
+  --color-text-primary: #{$neutral-0};
+  --color-text-secondary: #{$neutral-300};
+
+  --color-border: #{$neutral-700};
+
+  --color-toggle-off: #{$neutral-700};
+}
+
+html {
+  font-family:
+    'Noto Sans',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 100%;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text-primary);
+  @include text-preset-5;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg-page);
+}
