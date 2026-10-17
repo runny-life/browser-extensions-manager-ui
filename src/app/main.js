@@ -1,8 +1,19 @@
 import './styles/main.scss';
+import { loadExtensions } from '../shared/api/extensionsApi';
+import { renderError, renderExtensionsPage } from '../pages/extensions-page';
 
-const app = document.querySelector('#app');
+async function init() {
+  const { container } = renderExtensionsPage();
 
-app.innerHTML = `
-  <h1>Extensions Manager</h1>
-  <p>Loading...</p>
-`;
+  try {
+    const extensions = await loadExtensions();
+    console.log('Loaded extensions:', extensions);
+
+    container.innerHTML = /*html*/ `<p>Loaded ${extensions.length} extensions</p>`;
+  } catch (error) {
+    console.error('Failed to load extensions:', error);
+    renderError(container, error);
+  }
+}
+
+init();
