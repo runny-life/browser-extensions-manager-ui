@@ -1,3 +1,5 @@
+import { renderExtensionList } from '../../../widgets/extensions-list';
+
 export function renderExtensionsPage() {
   const app = document.querySelector('#app');
 
@@ -20,3 +22,5 @@ export function renderError(container, error) {
     <p className="error">Failed to load extensions. ${error.message}</p>
   `;
 }
+
+export { renderExtensionList };

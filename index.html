@@ -9,6 +9,26 @@
   </head>
   <body>
     <div id="app"></div>
+
+    <template id="extension-card-template">
+      <article class="extension-card">
+        <header class="extension-card__header">
+          <img class="extension-card__logo" alt="" aria-hidden="true" />
+          <div class="extension-card__info">
+            <h3 class="extension-card__name"></h3>
+            <p class="extension-card__description"></p>
+          </div>
+        </header>
+        <footer class="extension-card__footer">
+          <button class="extension-card__remove" type="button">Remove</button>
+          <label class="extension-card__toggle">
+            <input type="checkbox" role="switch" />
+            <span class="extension-card__toggle-track" aria-hidden="true"></span>
+          </label>
+        </footer>
+      </article>
+    </template>
+
     <script type="module" src="/src/app/main.js"></script>
   </body>
 </html>

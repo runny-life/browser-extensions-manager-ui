@@ -1,1 +1,1 @@
-export { renderExtensionsPage, renderError } from './ui/ExtensionsPage';
+export { renderExtensionsPage, renderError, renderExtensionList } from './ui/ExtensionsPage';

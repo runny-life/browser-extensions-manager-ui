@@ -1,15 +1,22 @@
 import './styles/main.scss';
 import { loadExtensions } from '../shared/api/extensionsApi';
-import { renderError, renderExtensionsPage } from '../pages/extensions-page';
+import { renderError, renderExtensionsPage, renderExtensionList } from '../pages/extensions-page';
+
+const handlers = {
+  onToggle(name, newState) {
+    console.log(`Toggle ${name} → ${newState}`);
+  },
+  onRemove(name) {
+    console.log(`Remove ${name}`);
+  },
+};
 
 async function init() {
   const { container } = renderExtensionsPage();
 
   try {
     const extensions = await loadExtensions();
-    console.log('Loaded extensions:', extensions);
-
-    container.innerHTML = /*html*/ `<p>Loaded ${extensions.length} extensions</p>`;
+    renderExtensionList(container, extensions, handlers);
   } catch (error) {
     console.error('Failed to load extensions:', error);
     renderError(container, error);
