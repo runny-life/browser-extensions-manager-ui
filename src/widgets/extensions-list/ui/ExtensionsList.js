@@ -1,3 +1,4 @@
+import './ExtensionsList.scss';
 import { createExtensionCard } from '../../../entities/extension';
 
 export function renderExtensionList(container, extensions, handlers) {
@@ -5,6 +6,7 @@ export function renderExtensionList(container, extensions, handlers) {
 
   const list = document.createElement('ul');
   list.className = 'extensions-list';
+  list.setAttribute('role', 'list');
 
   extensions.forEach((extension) => {
     const li = document.createElement('li');

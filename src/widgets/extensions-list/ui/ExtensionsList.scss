@@ -1,0 +1,10 @@
+@use '../../../app/styles/abstracts' as *;
+
+.extensions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: $spacing-150;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
