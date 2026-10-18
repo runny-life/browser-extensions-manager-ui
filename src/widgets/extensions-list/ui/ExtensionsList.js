@@ -2,7 +2,7 @@ import './ExtensionsList.scss';
 import { createExtensionCard } from '../../../entities/extension';
 
 export function renderExtensionList(container, extensions, handlers) {
-  container.innerHtml = '';
+  container.innerHTML = '';
 
   const list = document.createElement('ul');
   list.className = 'extensions-list';
