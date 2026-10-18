@@ -1,3 +1,5 @@
+import './ExtensionCard.scss';
+
 const template = document.querySelector('#extension-card-template');
 
 export function createExtensionCard(extension, { onToggle, onRemove }) {

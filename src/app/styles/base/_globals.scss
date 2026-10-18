@@ -26,10 +26,11 @@
   --color-border: #{$neutral-200};
 
   // === Focus ===
-  --color-focus-ring: #{$red-400};
+  --color-focus-ring: #{$red-700};
 
   // === Toggle ===
   --color-toggle-off: #{$neutral-300};
+  --color-toggle-on: #{$red-700};
   --color-toggle-knob: #{$neutral-0};
 }
 
