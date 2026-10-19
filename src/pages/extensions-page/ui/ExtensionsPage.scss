@@ -1,6 +1,45 @@
 @use '../../../app/styles/abstracts' as *;
 
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-500;
+  padding-top: $spacing-300;
+  padding-bottom: $spacing-800;
+
+  @media (min-width: $breakpoint-desktop) {
+    & {
+      gap: $spacing-800;
+      padding-top: $spacing-500;
+    }
+  }
+}
+
+.header {
+  width: 100%;
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: $spacing-100;
+    padding-inline: $spacing-150;
+    background-color: var(--color-bg-surface);
+    border-radius: $radius-10;
+
+    @media (min-width: $breakpoint-tablet) {
+      & {
+        padding-inline: $spacing-200;
+        padding-block: $spacing-150;
+        border-radius: $radius-20;
+      }
+    }
+  }
+}
+
 .extensions {
+  flex: 1;
+
   &__inner {
     display: flex;
     flex-direction: column;
