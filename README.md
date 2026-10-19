@@ -1,24 +1,31 @@
-# Frontend Mentor - Browser extensions manager UI
+# Frontend Mentor - Browser extensions manager UI solution
 
-![Design preview for the Browser extensions manager UI coding challenge](./preview.jpg)
+This is a solution to the [Browser extensions manager UI challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/browser-extension-manager-ui-yNZnOfsMAp).
 
-## Welcome! 👋
+## Table of contents
 
-Thanks for checking out this front-end coding challenge.
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+- [AI Collaboration](#ai-collaboration)
+- [Author](#author)
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects.
+## Overview
 
-**To do this challenge, you need a basic understanding of HTML, CSS and JavaScript.**
+A browser extensions manager built with vanilla JavaScript, SCSS, and Vite.
+Users can toggle extensions on/off, filter by state, remove items, and switch
+between light and dark themes. The interface is fully responsive and follows
+WCAG 2.2 AA accessibility guidelines.
 
-## The challenge
+### The challenge
 
-Your challenge is to build out this browser extension manager UI and get it looking as close to the design as possible.
-
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
-
-We provide the data for the extensions in a local `data.json` file. So you can use that to add the data dynamically if you choose.
-
-Your users should be able to: 
+Users should be able to:
 
 - Toggle extensions between active and inactive states
 - Filter active and inactive extensions
@@ -27,87 +34,162 @@ Your users should be able to:
 - View the optimal layout for the interface depending on their device's screen size
 - See hover and focus states for all interactive elements on the page
 
-### Want some support on the challenge? 
+### Screenshot
 
-[Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+| Light                                  | Dark                                 |
+| -------------------------------------- | ------------------------------------ |
+| ![Light theme](./screenshot-light.png) | ![Dark theme](./screenshot-dark.png) |
 
-## Where to find everything
+### Links
 
-Your task is to build out the project to the designs inside the `/design` folder. You will find both a mobile and a desktop version of the design. 
+- Solution URL: [GitHub](https://github.com/runny-life/browser-extensions-manager-ui)
+- Live Site URL: [Vercel](https://browser-extensions-manager-ui-liart.vercel.app/)
 
-The designs are in JPG static format. Using JPGs will mean that you'll need to use your best judgment for styles such as `font-size`, `padding` and `margin`. 
+## My process
 
-If you would like the Figma design file to gain experience using professional tools and build more accurate projects faster, you can [subscribe as a PRO member](https://www.frontendmentor.io/pro).
+### Built with
 
-All the required assets for this project are in the `/assets` folder. The images are already exported for the correct screen size and optimized.
+- **Semantic HTML5** — `<article>`, `<fieldset>`, `<legend>`, `<label>` for native semantics
+- **SCSS** with `@use` (no deprecated `@import`) and feature-sliced architecture
+- **CSS custom properties** for two-tier theming (palette → semantic tokens)
+- **CSS Grid** — intrinsic `auto-fill` + `minmax` for the card layout, `1fr auto` rows for cards
+- **Flexbox** for component-level layouts
+- **Vanilla JavaScript** (ES modules, no framework) with a simple observable store
+- **Vite 8** as build tool with `sass-embedded`
+- **Mobile-first workflow** with breakpoints at 768px and 1024px
+- **WCAG 2.2 AA** — native radio group, ARIA `switch`, `:focus-visible`, `.visually-hidden`
 
-We also include variable and static font files for the required fonts for this project. You can choose to either link to Google Fonts or use the local font files to host the fonts yourself. Note that we've removed the static font files for the font weights that aren't needed for this project.
+### What I learned
 
-There is also a `style-guide.md` file containing the information you'll need, such as color palette and fonts.
+**1. Two-tier design tokens scale better than a flat palette.**
+Instead of using `$neutral-900` everywhere, I split tokens into two layers:
+raw palette (`$neutral-900`, `$red-400`) and semantic roles (`--color-text-primary`,
+`--color-bg-accent`). When the dark theme needed a different accent (red-400 instead
+of red-700 for contrast), I only changed one semantic token — no component had to change.
 
-## Using AI coding assistants
+```scss
+:root {
+  --color-bg-accent: #{$red-700};
+}
+[data-theme='dark'] {
+  --color-bg-accent: #{$red-400};
+}
+```
 
-We've included two files to help you if you're using AI coding assistants (like Claude, GitHub Copilot, Cursor, etc.) while working on this challenge:
+**2. Native `<input type="radio">` inside `<fieldset>` is better than styled buttons.**
+My first instinct for the filter bar was `<button>` with `aria-pressed`.
+But native radios give keyboard arrow navigation, "exactly one selected" semantics,
+and correct screen reader announcements for free. I only had to style the sibling
+`<span>` with `input:checked + span` — no JavaScript logic for selection.
 
-- `AGENTS.md` - Contains detailed instructions for AI assistants on how to help you with this challenge. It's tailored to this challenge's difficulty level, so the AI will provide guidance appropriate to your learning stage—offering more support for beginner challenges and encouraging more independence on advanced ones.
-- `CLAUDE.md` - A pointer file that directs Claude-based tools to the AGENTS.md instructions.
+**3. `@use` in SCSS is not just a rename of `@import`.**
+`@import` loads files into the global namespace — variables leak everywhere,
+and the same file can be loaded twice. `@use` makes each file declare its own
+dependencies explicitly. It took me a while to understand that `base/_globals.scss`
+must write `@use '../abstracts' as *;` on its own — not rely on `main.scss` doing it.
 
-**How to use them:** You don't need to do anything! These files are automatically detected by most AI coding tools. The AI will read them and adjust its behavior to be a better learning partner—guiding you toward solutions rather than just giving you the answers.
+**4. Hiding a checkbox with `display: none` breaks accessibility.**
+For the custom toggle, I initially wanted `display: none` on the `<input>`.
+But that removes it from the tab order and from screen reader output.
+The correct pattern is `.visually-hidden` — the element is invisible but still focusable:
 
-**Note:** These files are designed to help you *learn*, not to do the work for you. The AI is instructed to ask questions, give hints, and explain concepts rather than writing complete solutions.
+```scss
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+```
 
-## Building your project
+**5. DOM properties are case-sensitive — and TypeScript would have caught my typo.**
+I spent 20 minutes debugging why the list duplicated instead of being replaced.
+The culprit was `container.innerHtml = ''` instead of `container.innerHTML = ''`.
+JavaScript created a new "shadow" property that did nothing. In TypeScript,
+this would be a compile-time error. A good reminder that type systems pay off.
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+**6. Preventing FOUC in theme switching requires a synchronous inline script.**
+The `main.js` module runs deferred — after HTML parsing. So if the user's saved
+theme is dark, they would briefly see the light theme before JS kicks in.
+The fix is a small inline script in `<head>` that sets `data-theme` before
+the browser paints:
 
-1. Initialize your project as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/).
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+```html
+<script>
+  (function () {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+  })();
+</script>
+```
 
-## Deploying your project
+### Continued development
 
-As mentioned above, there are many ways to host your project for free. Our recommended hosts are:
+Things I'd like to improve in this project:
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+- **Empty state for filters.** If the user selects "Active" but has no active
+  extensions, the list is just empty. A proper message ("No active extensions")
+  would be better UX.
+- **Persist extension state to `localStorage`.** Currently toggling or removing
+  resets on reload. A real extension manager would save state.
+- **Remove animation.** When a card is removed, it disappears abruptly. A fade-out
+  or collapse animation would feel smoother.
+- **Container queries for cards.** The card currently adapts via `minmax` on the grid,
+  but true container queries would let it reflow based on its own width — useful
+  if the card is ever reused in a sidebar.
+- **Unit tests.** No tests currently. I'd add Vitest for `state.js` and pure functions.
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://www.frontendmentor.io/guides/hosting-your-solution).
+### Useful resources
 
-## Create a custom `README.md`
+- [A more modern CSS reset — Andy Bell](https://piccalil.li/blog/a-more-modern-css-reset/) —
+  the basis for my `_reset.scss`. Explains _why_ each rule exists.
+- [Inclusive Components — Heydon Pickering](https://inclusive-components.design/) —
+  patterns for accessible toggles and tab-like controls.
+- [web.dev: `prefers-color-scheme`](https://web.dev/prefers-color-scheme/) —
+  guide on theme detection and FOUC prevention.
+- [MDN: CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) —
+  reference I came back to many times while building the theming system.
+- [Every Layout](https://every-layout.dev/) — helped me decide when to use Grid vs Flexbox.
 
-We strongly recommend overwriting this `README.md` with a custom one. We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code.
+## AI Collaboration
 
-The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings. Please feel free to edit our template as much as you like.
+I used Claude (Anthropic) as a learning assistant throughout this project.
+The code is written by me — Claude acted as a reviewer, explainer, and pairing partner.
 
-Once you've added your information to the template, delete this file and rename the `README-template.md` file to `README.md`. That will make it show up as your repository's README file.
+**How I used it:**
 
-## Submitting your solution
+- **Architecture decisions.** We discussed trade-offs between plain JS, React,
+  and Feature-Sliced Design before writing any code. I made the final call,
+  but the conversation clarified _why_ FSD makes sense for medium projects.
+- **Code review after each step.** After every feature, I shared my code and
+  asked for critique. Claude consistently flagged accessibility issues I missed —
+  for example, that `<button>` without `type="button"` behaves as submit inside forms,
+  or that `display: none` on a checkbox breaks keyboard focus.
+- **Debugging with explanations.** When I hit the `innerHtml` vs `innerHTML` bug,
+  Claude explained _why_ it happened (case-sensitive DOM properties) rather than
+  just providing a fix. That's how I actually learned.
+- **Not used for:** writing the full solution. Every line was written by me.
+  Where I got stuck, I asked for hints or conceptual explanations, then implemented
+  it myself.
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://www.frontendmentor.io/guides/how-to-submit-solutions) for tips on how to do this.
+**What worked well:** explaining the _why_ behind patterns — I now understand
+two-tier tokens, `.visually-hidden`, and FOUC prevention, not just how to copy them.
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+**What didn't:** sometimes the suggested code was more complex than necessary
+(e.g., over-engineered store patterns). I learned to simplify and question complexity.
 
-## Sharing your solution
+## Author
 
-There are multiple places you can share your solution:
+- GitHub - [@YOUR_USERNAME](https://github.com/runny-life)
+- Frontend Mentor - [@YOUR_USERNAME](https://www.frontendmentor.io/profile/runny-life)
 
-1. Share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community). 
-2. Share on [X (formerly Twitter)](https://x.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in your post. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on [LinkedIn](https://www.linkedin.com/company/frontend-mentor/).
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+## Acknowledgments
 
-We provide templates to help you share your solution once you've submitted it on the platform. Please do edit them and include specific questions when you're looking for feedback. 
-
-The more specific you are with your questions the more likely it is that another member of the community will give you feedback.
-
-## Got feedback for us?
-
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
-
-This challenge is completely free. Please share it with anyone who will find it useful for practice.
-
-**Have fun building!** 🚀
+Thanks to the Frontend Mentor community for the challenge and feedback.
+Special thanks to the authors of "Every Layout" and "Inclusive Components" —
+their patterns shaped how I think about layout and accessibility.
