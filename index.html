@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/browser-extensions-manager-ui/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Manage your browser extensions easily" />
+    <title>Extensions Manager</title>
+    <script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <script type="module" crossorigin src="/browser-extensions-manager-ui/assets/index-CF6kqsUB.js"></script>
+    <link rel="stylesheet" crossorigin href="/browser-extensions-manager-ui/assets/index-DWDGrqiC.css">
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <template id="extension-card-template">
+      <article class="extension-card">
+        <header class="extension-card__header">
+          <img class="extension-card__logo" alt="" aria-hidden="true" />
+          <div class="extension-card__info">
+            <h3 class="extension-card__name"></h3>
+            <p class="extension-card__description"></p>
+          </div>
+        </header>
+        <footer class="extension-card__footer">
+          <button class="extension-card__remove" type="button">Remove</button>
+          <label class="extension-card__toggle">
+            <input type="checkbox" role="switch" />
+            <span class="extension-card__toggle-track" aria-hidden="true"></span>
+          </label>
+        </footer>
+      </article>
+    </template>
+
+  </body>
+</html>
