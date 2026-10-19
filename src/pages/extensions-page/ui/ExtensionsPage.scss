@@ -1,0 +1,38 @@
+@use '../../../app/styles/abstracts' as *;
+
+.extensions {
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-500;
+
+    @media (min-width: $breakpoint-tablet) {
+      & {
+        gap: $spacing-400;
+      }
+    }
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-300;
+    width: 100%;
+
+    @media (min-width: $breakpoint-tablet) {
+      & {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  &__title {
+    text-align: center;
+
+    @media (min-width: $breakpoint-tablet) {
+      text-align: start;
+    }
+  }
+}

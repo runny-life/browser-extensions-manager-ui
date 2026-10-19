@@ -7,14 +7,28 @@ import {
   removeExtension,
 } from '../entities/extension';
 import { renderError, renderExtensionsPage, renderExtensionList } from '../pages/extensions-page';
+import { renderFilterBar } from '../widgets/filter-bar';
+
+let currentFilter = 'All';
+
+function getVisibleExtensions() {
+  const all = getExtensions();
+  if (currentFilter === 'active') return all.filter((e) => e.isActive);
+  if (currentFilter === 'inactive') return all.filter((e) => !e.isActive);
+
+  return all;
+}
 
 async function init() {
-  const { container } = renderExtensionsPage();
-  console.log(container);
+  const { container, filterContainer } = renderExtensionsPage();
 
   try {
     const data = await loadExtensions();
     setExtensions(data);
+
+    const rerenderList = () => {
+      renderExtensionList(container, getVisibleExtensions(), handlers);
+    };
 
     const handlers = {
       onToggle(name, isActive) {
@@ -22,10 +36,18 @@ async function init() {
       },
       onRemove(name) {
         removeExtension(name);
-        renderExtensionList(container, getExtensions(), handlers);
+        rerenderList();
       },
     };
 
+    const filterBar = renderFilterBar({
+      onChange(value) {
+        currentFilter = value;
+        rerenderList();
+      },
+    });
+
+    filterContainer.appendChild(filterBar);
     renderExtensionList(container, getExtensions(), handlers);
   } catch (error) {
     console.error('Failed to load extensions:', error);

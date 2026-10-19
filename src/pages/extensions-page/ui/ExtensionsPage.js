@@ -1,3 +1,4 @@
+import './ExtensionsPage.scss';
 import { renderExtensionList } from '../../../widgets/extensions-list';
 
 export function renderExtensionsPage() {
@@ -6,14 +7,24 @@ export function renderExtensionsPage() {
   app.innerHTML = /*html*/ `
     <div class="page">
       <header class="header__page">
-        <h1>Extensions List</h1>
       </header>
-      <main className="page__content" id="extensions-container"></main>
+      <main className="page__content">
+        <section class="extensions" aria-labelledby="extensions-title">
+          <div class="extensions__inner container">
+            <header class="extensions__header">
+              <h1 class="extensions__title" id="extensions-title">Extensions List</h1>
+              <div id="filter-container"></div>
+            </header>
+            <div id="extensions-container"></div>
+          </div>
+        </section>
+      </main>
     </div>
   `;
 
   return {
     container: document.querySelector('#extensions-container'),
+    filterContainer: document.querySelector('#filter-container'),
   };
 }
 

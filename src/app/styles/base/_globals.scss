@@ -78,3 +78,19 @@ body::before {
   z-index: -1;
   background: var(--bg-page);
 }
+
+.container {
+  --container-padding-x: 16px;
+
+  max-width: calc(#{$container-width} + var(--container-padding-x) * 2);
+  padding-inline: var(--container-padding-x);
+  margin-inline: auto;
+
+  @media (min-width: $breakpoint-desktop) {
+    --container-padding-x: 32px;
+  }
+}
+
+.visually-hidden {
+  @include visually-hidden;
+}
